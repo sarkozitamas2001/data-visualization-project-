@@ -5,6 +5,19 @@
   text-align: center;
 }
 
+.top-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgb(184, 184, 184);
+  z-index: 1000;
+}
+
+.visualization-area {
+  margin-top: 180px;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

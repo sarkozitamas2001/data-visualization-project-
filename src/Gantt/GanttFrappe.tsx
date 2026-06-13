@@ -111,12 +111,17 @@ export default function GanttFrappe() {
             //borderRadius: "8px",
             background: "#fff"
         }}
+    >
+        <div ref={ganttRef} />
+        <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
         >
-        <button onClick={() => runBenchmark(50)}>
             Run 50 Benchmarks
         </button>
-
-        <div ref={ganttRef} />
     </div>
   );
 }

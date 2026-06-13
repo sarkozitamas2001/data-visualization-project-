@@ -22,6 +22,28 @@ export default function StreamGraphD3({
   } = useBenchmarkRunner();
 
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const layersRef = useRef<SVGPathElement[]>([]);
+  const clipRectRef = useRef<d3.Selection<SVGRectElement, unknown, null, undefined> | null>(null);
+
+  const startAnimation = () => {
+
+    //if (!layersRef.current || !clipRectRef.current) return;
+    if (!clipRectRef.current) return;
+
+    //d3.selectAll(layersRef.current)
+      //.attr("clip-path", "url(#clip)");
+      // .style("opacity", 0)
+      // .transition()
+      // .duration(1200)
+      // .style("opacity", 0.9);
+
+    clipRectRef.current
+      .interrupt()
+      .attr("width", 0)
+      .transition()
+      .duration(2000)
+      .attr("width", width);
+  };
 
   useEffect(() => {
 
@@ -82,12 +104,9 @@ export default function StreamGraphD3({
       .attr("opacity", 0.9)
       .attr("d", area);
 
-    layers
-      .attr("clip-path", "url(#clip)")
-      .style("opacity", 0)
-      .transition()
-      .duration(1200)
-      .style("opacity", 0.9);
+    layers.style("opacity", 0.9).attr("clip-path", "url(#clip)");
+
+    layersRef.current = layers.nodes();
 
     svg.append("rect")
     .attr("width", width)
@@ -137,12 +156,11 @@ export default function StreamGraphD3({
     const clip = svg.append("clipPath")
       .attr("id", "clip");
 
-    clip.append("rect")
+    const clipRect = clip.append("rect")
       .attr("width", 0)
-      .attr("height", height)
-      .transition()
-      .duration(2000)
-      .attr("width", width);
+      .attr("height", height);
+
+    clipRectRef.current = clipRect;
 
     layers
       .on("mouseover", function (_event, d) {
@@ -204,11 +222,27 @@ export default function StreamGraphD3({
 
   return (
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
+      <button
+        onClick={startAnimation}
+        style={{
+          marginBottom: "10px",
+          padding: "8px 16px",
+          fontSize: "16px"
+        }}
+      >
+        ▶ Play Animation
       </button>
-      
       <svg ref={svgRef} width={width} height={height} />
+
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

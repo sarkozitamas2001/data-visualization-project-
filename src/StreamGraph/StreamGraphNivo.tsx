@@ -21,11 +21,8 @@ export default function StreamGraphNivo({
   useBenchmark("StreamGraphNivo", runId);  
 
   return (
-    <div style={{ height: "500px", width: "800px" }}>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
+    <div>
+      <div style={{ height: "500px", width: "800px" }}>
       <ResponsiveStream
         key={runId}
         data={data}
@@ -69,6 +66,16 @@ export default function StreamGraphNivo({
           }
         ]}
       />
+      </div>
+
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "50x",       
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

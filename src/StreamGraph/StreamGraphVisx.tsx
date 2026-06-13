@@ -29,6 +29,7 @@ export default function StreamGraphVisx({
 
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [activeKeys, setActiveKeys] = useState<string[]>(keys);
+  const [clipWidth, setClipWidth] = useState(0);
 
   useEffect(() => {
     setActiveKeys(keys);
@@ -84,9 +85,18 @@ export default function StreamGraphVisx({
 
   return (
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
+      <button
+        onClick={() => {
+          setClipWidth(0);
+
+          requestAnimationFrame(() => {
+            setClipWidth(width);
+          });
+        }}
+      >
+        ▶ Play Animation
       </button>
+
       <svg
         key={runId}
         width={width}
@@ -96,15 +106,13 @@ export default function StreamGraphVisx({
         {/* Animation */}
         <defs>
           <clipPath id="clip">
-            <rect width={width} height={height}>
-              <animate
-                attributeName="width"
-                from="0"
-                to={width}
-                dur="1.5s"
-                fill="freeze"
-              />
-            </rect>
+            <rect
+              width={clipWidth}
+              height={height}
+              style={{
+                transition: "width 2s linear"
+              }}
+            />
           </clipPath>
         </defs>
 
@@ -224,6 +232,15 @@ export default function StreamGraphVisx({
         </g>
 
       </svg>
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

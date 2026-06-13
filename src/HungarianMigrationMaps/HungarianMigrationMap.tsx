@@ -106,7 +106,7 @@ export default function HungarianMigrationMap({ data }: Props) {
         .style("border-radius", "4px")
         .style("font-size", "12px")
         .style("pointer-events", "none")
-        .style("opacity", 0);
+        .style("opacity", 0); // 0
 
     const infoPanel = d3.select("body")
         .append("div")
@@ -121,7 +121,7 @@ export default function HungarianMigrationMap({ data }: Props) {
         .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)")
         .style("font-family", "sans-serif")
         .style("font-size", "14px")
-        .style("opacity", 0);
+        .style("opacity", 0); //0
 
     infoPanel.html(`
         <div style="font-weight:bold;margin-bottom:6px">
@@ -159,7 +159,7 @@ export default function HungarianMigrationMap({ data }: Props) {
       .attr("fill", "none")
       .attr("stroke", "#e63946")
       .attr("stroke-width", 3)
-      .style("opacity", 0);
+      .style("opacity", 0); //1
 
     // Points
     g.selectAll("circle")
@@ -169,7 +169,7 @@ export default function HungarianMigrationMap({ data }: Props) {
       .attr("id", (_, i) => `point-${i}`)
       .attr("cx", d => projection([d.lon, d.lat])![0])
       .attr("cy", d => projection([d.lon, d.lat])![1])
-      .attr("r", 0)
+      .attr("r", 0) //6
       .attr("fill", "#1d3557")
       .on("mouseover", function(_event, d) {
       
@@ -191,7 +191,7 @@ export default function HungarianMigrationMap({ data }: Props) {
                 .on("mouseout", function() {
       
                   d3.select(this).attr("r", 5);
-                  tooltip.style("opacity", 0);
+                  tooltip.style("opacity", 1); //1
       
                 });
 
@@ -228,11 +228,6 @@ export default function HungarianMigrationMap({ data }: Props) {
 
   return (
     <div>
-
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
       <button
         onClick={startAnimation}
         style={{
@@ -249,6 +244,16 @@ export default function HungarianMigrationMap({ data }: Props) {
         width={width}
         height={height}
       />
+
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

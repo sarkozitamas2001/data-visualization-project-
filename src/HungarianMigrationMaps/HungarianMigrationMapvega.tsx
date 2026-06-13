@@ -2,7 +2,8 @@ import type { Spec } from "vega";
 import { type MigrationPoint } from "../data/hungarianMigrationData";
 
 export const HungarianMigrationMapvega = (
-  data: MigrationPoint[]
+  data: MigrationPoint[],
+  play: boolean
 ): Spec => ({
 
   $schema: "https://vega.github.io/schema/vega/v5.json",
@@ -12,12 +13,17 @@ export const HungarianMigrationMapvega = (
 
   signals: [
     {
+      name: "play",
+      value: play
+    },
+
+    {
       name: "step",
       value: 0,
       on: [
         {
-          events: { type: "timer", throttle: 800 },
-          update: "step + 1"
+          events: { type: "timer", throttle: 1000 }, //800
+          update: "play ? step + 1 : step"
         }
       ]
     }

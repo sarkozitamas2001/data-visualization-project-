@@ -64,10 +64,6 @@ export default function GanttVisx({ data }: Props) {
 
   return (
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
       <button
         onClick={() => setAnimate(true)}
         style={{
@@ -79,6 +75,7 @@ export default function GanttVisx({ data }: Props) {
       >
         ▶ Play Timeline
       </button>
+
       <svg 
         key={runId}
         width={width}
@@ -86,7 +83,7 @@ export default function GanttVisx({ data }: Props) {
       >
         
 
-        {/* BARS */}
+        {/* Bars */}
         <Group>
           {data
             .slice()
@@ -115,7 +112,8 @@ export default function GanttVisx({ data }: Props) {
                 fill={color}
                 rx={4}
 
-                width={animate ? xScale(d.end) - xScale(d.start) : 0}
+                //width={xScale(d.end) - xScale(d.start)}
+                width={animate ? xScale(d.end) - xScale(d.start) : 0} // animation
 
                 style={{
                   transition: "width 1s ease",
@@ -144,20 +142,20 @@ export default function GanttVisx({ data }: Props) {
           })}
         </Group>
 
-        {/* X AXIS */}
+        {/* X axis */}
         <AxisBottom
           top={height - 40}
           scale={xScale}
           numTicks={10}
         />
 
-        {/* Y AXIS */}
+        {/* Y axis */}
         <AxisLeft
           left={100}
           scale={yScale}
         />
 
-        {/* TOOLTIP */}
+        {/* Tooltip */}
         {tooltip && (
           <g transform={`translate(${tooltip.x + 10}, ${tooltip.y - 10})`}>
             <rect
@@ -183,6 +181,16 @@ export default function GanttVisx({ data }: Props) {
         )}
 
       </svg>
+
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

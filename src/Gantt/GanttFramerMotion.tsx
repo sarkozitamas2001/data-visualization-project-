@@ -63,10 +63,6 @@ export default function GanttFramerMotion({ data }: Props) {
 
   return (
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
       <button
         onClick={() => setAnimate(true)}
         style={{
@@ -85,7 +81,7 @@ export default function GanttFramerMotion({ data }: Props) {
         height={height}
       >
 
-        {/* BARS */}
+        {/* Bars */}
         <Group>
           {data
             .slice()
@@ -121,10 +117,21 @@ export default function GanttFramerMotion({ data }: Props) {
                       : { width: 0, opacity: 0 }
                   }
                   transition={{
-                    duration: 0.8,
+                    duration: 1,
                     delay: i * 0.2,
                     ease: "easeOut"
                   }}
+                  // initial={false}
+
+                  // animate={{
+                  //   width: barWidth,
+                  //   opacity: 1
+                  // }}
+
+                  // transition={{
+                  //   duration: 0
+                  // }}
+                  
                   onMouseMove={(e) => {
                     setTooltip({
                       x: e.clientX,
@@ -138,13 +145,14 @@ export default function GanttFramerMotion({ data }: Props) {
             })}
         </Group>
 
-        {/* AXES */}
+        {/* X axes */}
         <AxisBottom
           top={height - 40}
           scale={xScale}
           numTicks={10}
         />
 
+        {/* Y axes */}
         <AxisLeft
           left={100}
           scale={yScale}
@@ -152,7 +160,7 @@ export default function GanttFramerMotion({ data }: Props) {
 
       </svg>
 
-      {/* TOOLTIP */}
+      {/* Tooltip */}
       {tooltip && (
         <div
           style={{
@@ -173,6 +181,15 @@ export default function GanttFramerMotion({ data }: Props) {
           {tooltip.data.start} - {tooltip.data.end}
         </div>
       )}
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

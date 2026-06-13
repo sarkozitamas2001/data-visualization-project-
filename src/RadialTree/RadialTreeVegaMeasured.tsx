@@ -21,11 +21,16 @@ export default function RadialTreeVegaMeasured({
 
   return (
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
       <VegaEmbed  key={runId} spec={RadialTreeSpec(data)} />
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

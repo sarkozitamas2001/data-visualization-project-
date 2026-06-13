@@ -153,222 +153,229 @@ function App() {
   return (
     <div className="container">
 
-      <div className="tabs">
-        <button
-          className={`tab ${selectedTab === "tree" ? "active" : ""}`}
-          onClick={() => handleTabClick("tree")}
-        >
-          Radial Tree
-        </button>
-        <span> | </span>
+      <div className="top-panel">
 
-        <button
-          className={`tab ${selectedTab === "flow-map" ? "active" : ""}`}
-          onClick={() => handleTabClick("flow-map")}
-        >
-          Flow Map
-        </button>
-        <span> | </span>
+        <div className="tabs">
+          <button
+            className={`tab ${selectedTab === "tree" ? "active" : ""}`}
+            onClick={() => handleTabClick("tree")}
+          >
+            Radial Tree
+          </button>
+          <span> | </span>
 
-        <button
-          className={`tab ${selectedTab === "stream-graph" ? "active" : ""}`}
-          onClick={() => handleTabClick("stream-graph")}
-        >
-          Stream Graph
-        </button>
-        <span> | </span>
+          <button
+            className={`tab ${selectedTab === "flow-map" ? "active" : ""}`}
+            onClick={() => handleTabClick("flow-map")}
+          >
+            Flow Map
+          </button>
+          <span> | </span>
 
-        <button
-          className={`tab ${selectedTab === "gantt-chart" ? "active" : ""}`}
-          onClick={() => handleTabClick("gantt-chart")}
-        >
-          Gantt Chart
-        </button>
+          <button
+            className={`tab ${selectedTab === "stream-graph" ? "active" : ""}`}
+            onClick={() => handleTabClick("stream-graph")}
+          >
+            Stream Graph
+          </button>
+          <span> | </span>
+
+          <button
+            className={`tab ${selectedTab === "gantt-chart" ? "active" : ""}`}
+            onClick={() => handleTabClick("gantt-chart")}
+          >
+            Gantt Chart
+          </button>
+        </div>
+
+        <div style={{ margin: "20px 0" }}>
+          {selectedTab === "tree" && (
+            <>
+              <button onClick={() => setSelectedLib("d3-tree")}>D3</button>
+              <button onClick={() => setSelectedLib("vega-tree")}>Vega</button>
+              <div style={{marginTop: "10px" }}>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleTreeCsvUpload}
+                />
+              <button onClick={() => setTreeData(indoEuropeanData)}>
+                Load Default Dataset
+              </button>
+              </div>
+            </>
+          )}
+
+          {selectedTab === "flow-map" && (
+            <>
+              <button onClick={() => setSelectedLib("d3-map")}>D3</button>
+              <button onClick={() => setSelectedLib("vega-map")}>Vega</button>
+              <button onClick={() => setSelectedLib("leaflet-map")}>Leaflet</button>
+              <div style={{marginTop: "10px" }}>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleMigrationCsvUpload}
+                />
+              <button onClick={() => setMigrationData(hungarianMigration)}>
+                Load Default Dataset
+              </button>
+              </div>            
+            </>
+          )}
+
+          {selectedTab === "stream-graph" && (
+            <>
+              <button onClick={() => setSelectedLib("d3-stream")}>D3</button>
+              <button onClick={() => setSelectedLib("visx-stream")}>Visx</button>
+              <button onClick={() => setSelectedLib("nivo-stream")}>Nivo</button>
+              <button onClick={() => setSelectedLib("recharts-stream")}>Recharts</button>        
+              <div style={{marginTop: "10px" }}>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleStreamCsvUpload}
+                />
+              <button onClick={() => setStreamData(languageSpeakersNivo)}>
+                Load Default Dataset
+              </button>
+              </div>
+            </>
+          )}
+
+          {selectedTab === "gantt-chart" && (
+            <>
+              <button onClick={() => setSelectedLib("visx-gantt")}>Visx</button>
+              <button onClick={() => setSelectedLib("framer-gantt")}>Framer Motion</button>
+              <button onClick={() => setSelectedLib("frappe-gantt")}>Frappe</button>
+              <div style={{marginTop: "10px" }}>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleGanttCsvUpload}
+                />
+              <button onClick={() => setGanttData(languageEvolution)}>
+                Load Default Dataset
+              </button>
+              </div>
+            </>
+          )}
+        </div>
+
       </div>
 
-      <div style={{ margin: "20px 0" }}>
+      <div className="visualization-area">
+
         {selectedTab === "tree" && (
-          <>
-            <button onClick={() => setSelectedLib("d3-tree")}>D3</button>
-            <button onClick={() => setSelectedLib("vega-tree")}>Vega</button>
-            <div style={{marginTop: "10px" }}>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleTreeCsvUpload}
+          <div>
+            <h2>Indo-European Language Tree</h2>
+
+            {selectedLib === "vega-tree" && (
+              <RadialTreeVegaMeasured 
+              key="vega"
+              data={treeData} />
+            )}
+
+            {selectedLib === "d3-tree" && (
+              <RadialTreeD3 
+              key="d3"
+              data={treeData}
               />
-            <button onClick={() => setTreeData(indoEuropeanData)}>
-              Load Default Dataset
-            </button>
-            </div>
-          </>
+            )}
+          </div>
         )}
 
         {selectedTab === "flow-map" && (
-          <>
-            <button onClick={() => setSelectedLib("d3-map")}>D3</button>
-            <button onClick={() => setSelectedLib("vega-map")}>Vega</button>
-            <button onClick={() => setSelectedLib("leaflet-map")}>Leaflet</button>
-            <div style={{marginTop: "10px" }}>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleMigrationCsvUpload}
+          <div>
+            <h2>Migration Map</h2>
+
+            {selectedLib === "d3-map" && (
+              <HungarianMigrationMap 
+              key="d3"
+              data={migrationData}
               />
-            <button onClick={() => setMigrationData(hungarianMigration)}>
-              Load Default Dataset
-            </button>
-            </div>            
-          </>
+            )}
+
+            {selectedLib === "leaflet-map" && (
+              <HungarianMigrationLeaflet 
+              key="leaflet"
+              data={migrationData}
+              />
+            )}
+
+            {selectedLib === "vega-map" && (
+              <HungarianMigrationMapMeasured
+                key="vega"
+                data={migrationData}
+              />
+            )}
+          </div>
         )}
 
         {selectedTab === "stream-graph" && (
-          <>
-            <button onClick={() => setSelectedLib("d3-stream")}>D3</button>
-            <button onClick={() => setSelectedLib("visx-stream")}>Visx</button>
-            <button onClick={() => setSelectedLib("nivo-stream")}>Nivo</button>
-            <button onClick={() => setSelectedLib("recharts-stream")}>Recharts</button>        
-            <div style={{marginTop: "10px" }}>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleStreamCsvUpload}
+          <div>
+            <h2>Stream Graph</h2>
+
+            {selectedLib === "nivo-stream" && (
+              <StreamGraphNivo 
+              key="nivo"
+              data={streamData}
+              keys={streamKeys}
               />
-            <button onClick={() => setStreamData(languageSpeakersNivo)}>
-              Load Default Dataset
-            </button>
-            </div>
-          </>
+            )}
+
+            {selectedLib === "recharts-stream" && (
+              <StreamGraphRecharts 
+              key="recharts"
+              data={streamData}
+              keys={streamKeys}
+              />
+            )}
+
+            {selectedLib === "d3-stream" && (
+              <StreamGraphD3 
+              key="d3"
+              data={streamData}
+              keys={streamKeys}
+              />
+            )}
+
+            {selectedLib === "visx-stream" && (
+              <StreamGraphVisx 
+              key="visx"
+              data={streamData}
+              keys={streamKeys}
+              />
+            )}
+          </div>
         )}
 
         {selectedTab === "gantt-chart" && (
-          <>
-            <button onClick={() => setSelectedLib("visx-gantt")}>Visx</button>
-            <button onClick={() => setSelectedLib("framer-gantt")}>Framer Motion</button>
-            <button onClick={() => setSelectedLib("frappe-gantt")}>Frappe</button>
-            <div style={{marginTop: "10px" }}>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleGanttCsvUpload}
+          <div>
+            <h2>Gantt Chart</h2>
+
+            {selectedLib === "visx-gantt" && (
+              <GanttVisx 
+              key="visx"
+              data={ganttData}
               />
-            <button onClick={() => setGanttData(languageEvolution)}>
-              Load Default Dataset
-            </button>
-            </div>
-          </>
+            )}
+
+            {selectedLib === "framer-gantt" && (
+              <GanttFramerMotion 
+              key="framer"
+              data={ganttData}
+              />
+            )}
+
+            {selectedLib === "frappe-gantt" && (
+              <GanttFrappe key="frappe" />
+            )}
+          </div>
         )}
+
       </div>
-
-
-      {selectedTab === "tree" && (
-        <div>
-          <h2>Indo-European Language Tree</h2>
-
-          {selectedLib === "vega-tree" && (
-            <RadialTreeVegaMeasured 
-            key="vega"
-            data={treeData} />
-          )}
-
-          {selectedLib === "d3-tree" && (
-            <RadialTreeD3 
-            key="d3"
-            data={treeData}
-            />
-          )}
-        </div>
-      )}
-
-      {selectedTab === "flow-map" && (
-        <div>
-          <h2>Migration Map</h2>
-
-          {selectedLib === "d3-map" && (
-            <HungarianMigrationMap 
-            key="d3"
-            data={migrationData}
-            />
-          )}
-
-          {selectedLib === "leaflet-map" && (
-            <HungarianMigrationLeaflet 
-            key="leaflet"
-            data={migrationData}
-            />
-          )}
-
-          {selectedLib === "vega-map" && (
-            <HungarianMigrationMapMeasured
-              key="vega"
-              data={migrationData}
-            />
-          )}
-        </div>
-      )}
-
-      {selectedTab === "stream-graph" && (
-        <div>
-          <h2>Stream Graph</h2>
-
-          {selectedLib === "nivo-stream" && (
-            <StreamGraphNivo 
-            key="nivo"
-            data={streamData}
-            keys={streamKeys}
-            />
-          )}
-
-          {selectedLib === "recharts-stream" && (
-            <StreamGraphRecharts 
-            key="recharts"
-            data={streamData}
-            keys={streamKeys}
-            />
-          )}
-
-          {selectedLib === "d3-stream" && (
-            <StreamGraphD3 
-            key="d3"
-            data={streamData}
-            keys={streamKeys}
-            />
-          )}
-
-          {selectedLib === "visx-stream" && (
-            <StreamGraphVisx 
-            key="visx"
-            data={streamData}
-            keys={streamKeys}
-            />
-          )}
-        </div>
-      )}
-
-      {selectedTab === "gantt-chart" && (
-        <div>
-          <h2>Gantt Chart</h2>
-
-          {selectedLib === "visx-gantt" && (
-            <GanttVisx 
-            key="visx"
-            data={ganttData}
-            />
-          )}
-
-          {selectedLib === "framer-gantt" && (
-            <GanttFramerMotion 
-            key="framer"
-            data={ganttData}
-            />
-          )}
-
-          {selectedLib === "frappe-gantt" && (
-            <GanttFrappe key="frappe" />
-          )}
-        </div>
-      )}
-
+      
     </div>
   );
 }

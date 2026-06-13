@@ -160,16 +160,12 @@ export default function RadialTreeD3({ data }: Props) {
   return (
 
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
       <svg
         key={runId} 
         ref={svgRef}
       ></svg>
 
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 5 }}>
 
         <label>
           <input
@@ -249,6 +245,15 @@ export default function RadialTreeD3({ data }: Props) {
 
       </div>
 
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

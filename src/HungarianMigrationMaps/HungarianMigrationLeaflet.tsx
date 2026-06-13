@@ -37,10 +37,6 @@ export default function HungarianMigrationLeaflet({ data }: Props) {
 
   return (
     <div>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
       <div style={{ width: "1020px", height: "600px" }}>
         <MapContainer
           key={runId}
@@ -71,6 +67,15 @@ export default function HungarianMigrationLeaflet({ data }: Props) {
 
         </MapContainer>
       </div>
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }

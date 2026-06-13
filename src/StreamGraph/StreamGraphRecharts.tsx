@@ -30,11 +30,11 @@ export default function StreamGraphRecharts({
 
   return (
     <div style={{ width: "100%", height: 500 }}>
-      <button onClick={() => runBenchmark(50)}>
-        Run 50 Benchmarks
-      </button>
-
-      <ResponsiveContainer key={runId}>
+      <ResponsiveContainer 
+        key={runId}
+        height={480}
+        width={760}
+      >
         <AreaChart data={data}>
 
           <XAxis dataKey="year" />
@@ -56,6 +56,15 @@ export default function StreamGraphRecharts({
 
         </AreaChart>
       </ResponsiveContainer>
+      <button 
+            onClick={() => runBenchmark(50)} 
+            style={{
+                marginTop: "35px",
+                
+            }}
+        >
+            Run 50 Benchmarks
+        </button>
     </div>
   );
 }
