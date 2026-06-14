@@ -41,7 +41,7 @@ import {
 import VisualizationInfo from "./info/VisualizationInfo";
 
 function App() {
-  const [selectedTab, setSelectedTab] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState<string | null>("tree");
   const [selectedLib, setSelectedLib] = useState<string | null>(null);
   const [treeData, setTreeData] = useState<TreeNode[]>(indoEuropeanData);
   const [migrationData, setMigrationData] =
