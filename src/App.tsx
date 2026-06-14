@@ -25,30 +25,42 @@ import GanttFrappe from "./Gantt/GanttFrappe";
 //data
 import Papa from "papaparse";
 import { indoEuropeanData, type TreeNode } from "./data/indoEuropeanData";
-import { hungarianMigration, type MigrationPoint } from "./data/hungarianMigrationData";
-import { languageSpeakersNivo, type languageSpeakersType } from "./data/languageSpeakers";
-import { languageEvolution, type LanguageStage } from "./data/languageEvolution";
+import {
+  hungarianMigration,
+  type MigrationPoint,
+} from "./data/hungarianMigrationData";
+import {
+  languageSpeakersNivo,
+  type languageSpeakersType,
+} from "./data/languageSpeakers";
+import {
+  languageEvolution,
+  type LanguageStage,
+} from "./data/languageEvolution";
+
+import VisualizationInfo from "./info/VisualizationInfo";
 
 function App() {
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
   const [selectedLib, setSelectedLib] = useState<string | null>(null);
   const [treeData, setTreeData] = useState<TreeNode[]>(indoEuropeanData);
-  const [migrationData, setMigrationData] = useState<MigrationPoint[]>(hungarianMigration);
-  const [streamData, setStreamData] = useState<languageSpeakersType[]>(languageSpeakersNivo);
-  const [ganttData, setGanttData] = useState<LanguageStage[]>(languageEvolution);
+  const [migrationData, setMigrationData] =
+    useState<MigrationPoint[]>(hungarianMigration);
+  const [streamData, setStreamData] =
+    useState<languageSpeakersType[]>(languageSpeakersNivo);
+  const [ganttData, setGanttData] =
+    useState<LanguageStage[]>(languageEvolution);
 
-  const streamKeys = 
+  const streamKeys =
     streamData.length > 0
-     ? Object.keys(streamData[0]).filter(key => key !== "year")
-     : [];
+      ? Object.keys(streamData[0]).filter((key) => key !== "year")
+      : [];
 
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
 
-  const handleTreeCsvUpload = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleTreeCsvUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -58,19 +70,19 @@ function App() {
       skipEmptyLines: true,
 
       complete: (results) => {
-        const parsed = results.data.map(row => ({
+        const parsed = results.data.map((row) => ({
           id: row.id,
           name: row.name,
-          parent: row.parent || null
+          parent: row.parent || null,
         }));
 
         setTreeData(parsed);
-      }
+      },
     });
   };
 
   const handleMigrationCsvUpload = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
 
@@ -86,16 +98,16 @@ function App() {
           name: row.name,
           lat: Number(row.lat),
           lon: Number(row.lon),
-          year: Number(row.year)
+          year: Number(row.year),
         }));
 
         setMigrationData(parsed);
-      }
+      },
     });
   };
 
   const handleStreamCsvUpload = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
 
@@ -108,27 +120,22 @@ function App() {
       complete: (results) => {
         const parsed = results.data.map((row: Record<string, string>) => {
           const converted: languageSpeakersType = {
-            year: ""
+            year: "",
           };
 
-          Object.keys(row).forEach(key => {
-            converted[key] =
-              key === "year"
-                ? row[key]
-                : Number(row[key]);
+          Object.keys(row).forEach((key) => {
+            converted[key] = key === "year" ? row[key] : Number(row[key]);
           });
 
           return converted;
         });
 
         setStreamData(parsed);
-      }
+      },
     });
   };
 
-  const handleGanttCsvUpload = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleGanttCsvUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -138,23 +145,21 @@ function App() {
       skipEmptyLines: true,
 
       complete: (results) => {
-        const parsed = results.data.map(row => ({
+        const parsed = results.data.map((row) => ({
           language: row.language,
           stage: row.stage,
           start: Number(row.start),
-          end: Number(row.end)
+          end: Number(row.end),
         }));
 
         setGanttData(parsed);
-      }
+      },
     });
   };
 
   return (
     <div className="container">
-
       <div className="top-panel">
-
         <div className="tabs">
           <button
             className={`tab ${selectedTab === "tree" ? "active" : ""}`}
@@ -193,15 +198,15 @@ function App() {
             <>
               <button onClick={() => setSelectedLib("d3-tree")}>D3</button>
               <button onClick={() => setSelectedLib("vega-tree")}>Vega</button>
-              <div style={{marginTop: "10px" }}>
+              <div style={{ marginTop: "10px" }}>
                 <input
                   type="file"
                   accept=".csv"
                   onChange={handleTreeCsvUpload}
                 />
-              <button onClick={() => setTreeData(indoEuropeanData)}>
-                Load Default Dataset
-              </button>
+                <button onClick={() => setTreeData(indoEuropeanData)}>
+                  Load Default Dataset
+                </button>
               </div>
             </>
           )}
@@ -210,35 +215,43 @@ function App() {
             <>
               <button onClick={() => setSelectedLib("d3-map")}>D3</button>
               <button onClick={() => setSelectedLib("vega-map")}>Vega</button>
-              <button onClick={() => setSelectedLib("leaflet-map")}>Leaflet</button>
-              <div style={{marginTop: "10px" }}>
+              <button onClick={() => setSelectedLib("leaflet-map")}>
+                Leaflet
+              </button>
+              <div style={{ marginTop: "10px" }}>
                 <input
                   type="file"
                   accept=".csv"
                   onChange={handleMigrationCsvUpload}
                 />
-              <button onClick={() => setMigrationData(hungarianMigration)}>
-                Load Default Dataset
-              </button>
-              </div>            
+                <button onClick={() => setMigrationData(hungarianMigration)}>
+                  Load Default Dataset
+                </button>
+              </div>
             </>
           )}
 
           {selectedTab === "stream-graph" && (
             <>
               <button onClick={() => setSelectedLib("d3-stream")}>D3</button>
-              <button onClick={() => setSelectedLib("visx-stream")}>Visx</button>
-              <button onClick={() => setSelectedLib("nivo-stream")}>Nivo</button>
-              <button onClick={() => setSelectedLib("recharts-stream")}>Recharts</button>        
-              <div style={{marginTop: "10px" }}>
+              <button onClick={() => setSelectedLib("visx-stream")}>
+                Visx
+              </button>
+              <button onClick={() => setSelectedLib("nivo-stream")}>
+                Nivo
+              </button>
+              <button onClick={() => setSelectedLib("recharts-stream")}>
+                Recharts
+              </button>
+              <div style={{ marginTop: "10px" }}>
                 <input
                   type="file"
                   accept=".csv"
                   onChange={handleStreamCsvUpload}
                 />
-              <button onClick={() => setStreamData(languageSpeakersNivo)}>
-                Load Default Dataset
-              </button>
+                <button onClick={() => setStreamData(languageSpeakersNivo)}>
+                  Load Default Dataset
+                </button>
               </div>
             </>
           )}
@@ -246,136 +259,106 @@ function App() {
           {selectedTab === "gantt-chart" && (
             <>
               <button onClick={() => setSelectedLib("visx-gantt")}>Visx</button>
-              <button onClick={() => setSelectedLib("framer-gantt")}>Framer Motion</button>
-              <button onClick={() => setSelectedLib("frappe-gantt")}>Frappe</button>
-              <div style={{marginTop: "10px" }}>
+              <button onClick={() => setSelectedLib("framer-gantt")}>
+                Framer Motion
+              </button>
+              <button onClick={() => setSelectedLib("frappe-gantt")}>
+                Frappe
+              </button>
+              <div style={{ marginTop: "10px" }}>
                 <input
                   type="file"
                   accept=".csv"
                   onChange={handleGanttCsvUpload}
                 />
-              <button onClick={() => setGanttData(languageEvolution)}>
-                Load Default Dataset
-              </button>
+                <button onClick={() => setGanttData(languageEvolution)}>
+                  Load Default Dataset
+                </button>
               </div>
             </>
           )}
         </div>
-
       </div>
 
       <div className="visualization-area">
-
         {selectedTab === "tree" && (
           <div>
             <h2>Indo-European Language Tree</h2>
 
             {selectedLib === "vega-tree" && (
-              <RadialTreeVegaMeasured 
-              key="vega"
-              data={treeData} />
+              <RadialTreeVegaMeasured key="vega" data={treeData} />
             )}
 
             {selectedLib === "d3-tree" && (
-              <RadialTreeD3 
-              key="d3"
-              data={treeData}
-              />
+              <RadialTreeD3 key="d3" data={treeData} />
             )}
           </div>
         )}
 
         {selectedTab === "flow-map" && (
           <div>
-            <h2>Migration Map</h2>
+            <h2>Hungarian Migration Map</h2>
 
             {selectedLib === "d3-map" && (
-              <HungarianMigrationMap 
-              key="d3"
-              data={migrationData}
-              />
+              <HungarianMigrationMap key="d3" data={migrationData} />
             )}
 
             {selectedLib === "leaflet-map" && (
-              <HungarianMigrationLeaflet 
-              key="leaflet"
-              data={migrationData}
-              />
+              <HungarianMigrationLeaflet key="leaflet" data={migrationData} />
             )}
 
             {selectedLib === "vega-map" && (
-              <HungarianMigrationMapMeasured
-                key="vega"
-                data={migrationData}
-              />
+              <HungarianMigrationMapMeasured key="vega" data={migrationData} />
             )}
           </div>
         )}
 
         {selectedTab === "stream-graph" && (
           <div>
-            <h2>Stream Graph</h2>
+            <h2>Language Speakers Evoluition</h2>
 
             {selectedLib === "nivo-stream" && (
-              <StreamGraphNivo 
-              key="nivo"
-              data={streamData}
-              keys={streamKeys}
-              />
+              <StreamGraphNivo key="nivo" data={streamData} keys={streamKeys} />
             )}
 
             {selectedLib === "recharts-stream" && (
-              <StreamGraphRecharts 
-              key="recharts"
-              data={streamData}
-              keys={streamKeys}
+              <StreamGraphRecharts
+                key="recharts"
+                data={streamData}
+                keys={streamKeys}
               />
             )}
 
             {selectedLib === "d3-stream" && (
-              <StreamGraphD3 
-              key="d3"
-              data={streamData}
-              keys={streamKeys}
-              />
+              <StreamGraphD3 key="d3" data={streamData} keys={streamKeys} />
             )}
 
             {selectedLib === "visx-stream" && (
-              <StreamGraphVisx 
-              key="visx"
-              data={streamData}
-              keys={streamKeys}
-              />
+              <StreamGraphVisx key="visx" data={streamData} keys={streamKeys} />
             )}
           </div>
         )}
 
         {selectedTab === "gantt-chart" && (
           <div>
-            <h2>Gantt Chart</h2>
+            <h2>Evolution Of Languages</h2>
 
             {selectedLib === "visx-gantt" && (
-              <GanttVisx 
-              key="visx"
-              data={ganttData}
-              />
+              <GanttVisx key="visx" data={ganttData} />
             )}
 
             {selectedLib === "framer-gantt" && (
-              <GanttFramerMotion 
-              key="framer"
-              data={ganttData}
-              />
+              <GanttFramerMotion key="framer" data={ganttData} />
             )}
 
-            {selectedLib === "frappe-gantt" && (
-              <GanttFrappe key="frappe" />
-            )}
+            {selectedLib === "frappe-gantt" && <GanttFrappe key="frappe" />}
           </div>
         )}
 
+        <div className="info-panel">
+          <VisualizationInfo tab={selectedTab} />
+        </div>
       </div>
-      
     </div>
   );
 }

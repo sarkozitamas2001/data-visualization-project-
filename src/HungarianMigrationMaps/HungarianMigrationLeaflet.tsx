@@ -1,4 +1,10 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
 import { type MigrationPoint } from "../data/hungarianMigrationData";
 import L from "leaflet";
 import { useBenchmarkRunner } from "../hooks/useBenchmarkRunner";
@@ -14,25 +20,22 @@ interface Props {
 delete (L.Icon.Default.prototype as { _getIconUrl?: () => string })._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
 export default function HungarianMigrationLeaflet({ data }: Props) {
-
-  const route = data.map(p => [p.lat, p.lon] as [number, number]);
+  const route = data.map((p) => [p.lat, p.lon] as [number, number]);
 
   const bounds: L.LatLngBoundsExpression = [
     [35, -10],
-    [70, 90]
+    [70, 90],
   ];
 
-  const {
-    runId,
-    runBenchmark
-  } = useBenchmarkRunner();
-  
+  const { runId, runBenchmark } = useBenchmarkRunner();
+
   useBenchmark("FlowMapLeaflet", runId);
 
   return (
@@ -44,7 +47,6 @@ export default function HungarianMigrationLeaflet({ data }: Props) {
           maxBounds={bounds}
           style={{ width: "100%", height: "100%" }}
         >
-
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -64,18 +66,16 @@ export default function HungarianMigrationLeaflet({ data }: Props) {
               </Popup>
             </Marker>
           ))}
-
         </MapContainer>
       </div>
-      <button 
-            onClick={() => runBenchmark(50)} 
-            style={{
-                marginTop: "35px",
-                
-            }}
-        >
-            Run 50 Benchmarks
-        </button>
+      <button
+        onClick={() => runBenchmark(50)}
+        style={{
+          marginTop: "35px",
+        }}
+      >
+        Run 50 Benchmarks
+      </button>
     </div>
   );
 }

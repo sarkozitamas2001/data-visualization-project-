@@ -16,11 +16,7 @@ const width = 1300;
 const height = 500;
 
 export default function GanttFramerMotion({ data }: Props) {
-
-  const {
-    runId,
-    runBenchmark
-  } = useBenchmarkRunner();
+  const { runId, runBenchmark } = useBenchmarkRunner();
 
   const [animate, setAnimate] = useState(false);
   const [tooltip, setTooltip] = useState<{
@@ -29,11 +25,10 @@ export default function GanttFramerMotion({ data }: Props) {
     data: LanguageStage;
   } | null>(null);
 
-  const languages = Array.from(
-    new Set(data.map(d => d.language))
-  );
+  const languages = Array.from(new Set(data.map((d) => d.language)));
 
-  const colorScale = d3.scaleOrdinal<string>()
+  const colorScale = d3
+    .scaleOrdinal<string>()
     .domain(languages)
     .range([
       "#8884d8",
@@ -43,21 +38,21 @@ export default function GanttFramerMotion({ data }: Props) {
       "#0088fe",
       "#00c49f",
       "#ff8042",
-      "#a4de6c"
+      "#a4de6c",
     ]);
 
   const xScale = scaleLinear({
     domain: [400, 2025],
-    range: [100, width - 250]
+    range: [100, width - 250],
   });
 
   const yScale = scaleBand({
     domain: languages,
     range: [40, height - 40],
-    padding: 0.3
+    padding: 0.3,
   });
 
-  const stagesByLanguage = d3.group(data, d => d.language);
+  const stagesByLanguage = d3.group(data, (d) => d.language);
 
   useBenchmark("GanttFramerMotion", runId);
 
@@ -69,32 +64,26 @@ export default function GanttFramerMotion({ data }: Props) {
           marginBottom: "10px",
           padding: "8px 16px",
           fontSize: "16px",
-          cursor: "pointer"
+          cursor: "pointer",
         }}
       >
         ▶ Play Timeline
       </button>
 
-      <svg 
-        key={runId}
-        width={width}
-        height={height}
-      >
-
+      <svg key={runId} width={width} height={height}>
         {/* Bars */}
         <Group>
           {data
             .slice()
             .sort((a, b) => a.start - b.start)
             .map((d, i) => {
-
               const stages = stagesByLanguage.get(d.language)!;
-              const index = stages.findIndex(s => s.stage === d.stage);
+              const index = stages.findIndex((s) => s.stage === d.stage);
               const t = index / (stages.length - 1 || 1);
 
               const color = d3.interpolateLab(
                 "#ffffff",
-                colorScale(d.language)!
+                colorScale(d.language)!,
               )(0.3 + t * 0.7);
 
               const barWidth = xScale(d.end) - xScale(d.start);
@@ -119,7 +108,7 @@ export default function GanttFramerMotion({ data }: Props) {
                   transition={{
                     duration: 1,
                     delay: i * 0.2,
-                    ease: "easeOut"
+                    ease: "easeOut",
                   }}
                   // initial={false}
 
@@ -131,12 +120,12 @@ export default function GanttFramerMotion({ data }: Props) {
                   // transition={{
                   //   duration: 0
                   // }}
-                  
+
                   onMouseMove={(e) => {
                     setTooltip({
                       x: e.clientX,
                       y: e.clientY,
-                      data: d
+                      data: d,
                     });
                   }}
                   onMouseLeave={() => setTooltip(null)}
@@ -146,18 +135,10 @@ export default function GanttFramerMotion({ data }: Props) {
         </Group>
 
         {/* X axes */}
-        <AxisBottom
-          top={height - 40}
-          scale={xScale}
-          numTicks={10}
-        />
+        <AxisBottom top={height - 40} scale={xScale} numTicks={10} />
 
         {/* Y axes */}
-        <AxisLeft
-          left={100}
-          scale={yScale}
-        />
-
+        <AxisLeft left={100} scale={yScale} />
       </svg>
 
       {/* Tooltip */}
@@ -173,23 +154,24 @@ export default function GanttFramerMotion({ data }: Props) {
             padding: "8px 12px",
             fontSize: "13px",
             boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-            pointerEvents: "none"
+            pointerEvents: "none",
           }}
         >
-          <strong>{tooltip.data.language}</strong><br />
-          {tooltip.data.stage}<br />
+          <strong>{tooltip.data.language}</strong>
+          <br />
+          {tooltip.data.stage}
+          <br />
           {tooltip.data.start} - {tooltip.data.end}
         </div>
       )}
-      <button 
-            onClick={() => runBenchmark(50)} 
-            style={{
-                marginTop: "35px",
-                
-            }}
-        >
-            Run 50 Benchmarks
-        </button>
+      <button
+        onClick={() => runBenchmark(50)}
+        style={{
+          marginTop: "35px",
+        }}
+      >
+        Run 50 Benchmarks
+      </button>
     </div>
   );
 }

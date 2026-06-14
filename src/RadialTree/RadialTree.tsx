@@ -1,9 +1,7 @@
 import type { Spec } from "vega";
 import { type TreeNode } from "../data/indoEuropeanData";
 
-export const RadialTreeSpec = (
-  data: TreeNode[]
-): Spec => ({
+export const RadialTreeSpec = (data: TreeNode[]): Spec => ({
   $schema: "https://vega.github.io/schema/vega/v5.json",
   description: "Interactive Radial Indo-European Tree",
   width: 1100,
@@ -15,38 +13,38 @@ export const RadialTreeSpec = (
     {
       name: "labels",
       value: true,
-      bind: { input: "checkbox" }
+      bind: { input: "checkbox" },
     },
     {
       name: "radius",
       value: 380,
-      bind: { input: "range", min: 100, max: 500 }
+      bind: { input: "range", min: 100, max: 500 },
     },
     {
       name: "extent",
       value: 360,
-      bind: { input: "range", min: 0, max: 360 }
+      bind: { input: "range", min: 0, max: 360 },
     },
     {
       name: "rotate",
       value: 0,
-      bind: { input: "range", min: 0, max: 360 }
+      bind: { input: "range", min: 0, max: 360 },
     },
     {
       name: "layout",
       value: "tidy",
-      bind: { input: "radio", options: ["tidy", "cluster"] }
+      bind: { input: "radio", options: ["tidy", "cluster"] },
     },
     {
       name: "links",
       value: "diagonal",
       bind: {
         input: "select",
-        options: ["line", "curve", "diagonal", "orthogonal"]
-      }
+        options: ["line", "curve", "diagonal", "orthogonal"],
+      },
     },
     { name: "originX", update: "width / 2" },
-    { name: "originY", update: "height / 2" }
+    { name: "originY", update: "height / 2" },
   ],
 
   data: [
@@ -57,40 +55,40 @@ export const RadialTreeSpec = (
         {
           type: "stratify",
           key: "id",
-          parentKey: "parent"
+          parentKey: "parent",
         },
         {
           type: "tree",
           method: { signal: "layout" },
           size: [1, { signal: "radius" }],
-          as: ["alpha", "radius", "depth", "children"]
+          as: ["alpha", "radius", "depth", "children"],
         },
         {
           type: "formula",
           expr: "(rotate + extent * datum.alpha + 270) % 360",
-          as: "angle"
+          as: "angle",
         },
         {
           type: "formula",
           expr: "PI * datum.angle / 180",
-          as: "radians"
+          as: "radians",
         },
         {
           type: "formula",
           expr: "inrange(datum.angle, [90, 270])",
-          as: "leftside"
+          as: "leftside",
         },
         {
           type: "formula",
           expr: "originX + datum.radius * cos(datum.radians)",
-          as: "x"
+          as: "x",
         },
         {
           type: "formula",
           expr: "originY + datum.radius * sin(datum.radians)",
-          as: "y"
-        }
-      ]
+          as: "y",
+        },
+      ],
     },
     {
       name: "linksData",
@@ -104,10 +102,10 @@ export const RadialTreeSpec = (
           sourceX: "source.radians",
           sourceY: "source.radius",
           targetX: "target.radians",
-          targetY: "target.radius"
-        }
-      ]
-    }
+          targetY: "target.radius",
+        },
+      ],
+    },
   ],
 
   scales: [
@@ -116,8 +114,8 @@ export const RadialTreeSpec = (
       type: "linear",
       range: { scheme: "magma" },
       domain: { data: "tree", field: "depth" },
-      zero: true
-    }
+      zero: true,
+    },
   ],
 
   marks: [
@@ -130,9 +128,9 @@ export const RadialTreeSpec = (
           y: { signal: "originY" },
           path: { field: "path" },
           stroke: { value: "#ccc" },
-          strokeWidth: { value: 1 }
-        }
-      }
+          strokeWidth: { value: 1 },
+        },
+      },
     },
     {
       type: "symbol",
@@ -140,14 +138,14 @@ export const RadialTreeSpec = (
       encode: {
         enter: {
           size: { value: 120 },
-          stroke: { value: "#fff" }
+          stroke: { value: "#fff" },
         },
         update: {
           x: { field: "x" },
           y: { field: "y" },
-          fill: { scale: "color", field: "depth" }
-        }
-      }
+          fill: { scale: "color", field: "depth" },
+        },
+      },
     },
     {
       type: "text",
@@ -156,21 +154,21 @@ export const RadialTreeSpec = (
         enter: {
           text: { field: "name" },
           fontSize: { value: 13 },
-          baseline: { value: "middle" }
+          baseline: { value: "middle" },
         },
         update: {
           x: { field: "x" },
           y: { field: "y" },
           dx: { signal: "(datum.leftside ? -1 : 1) * 8" },
           angle: {
-            signal: "datum.leftside ? datum.angle - 180 : datum.angle"
+            signal: "datum.leftside ? datum.angle - 180 : datum.angle",
           },
           align: {
-            signal: "datum.leftside ? 'right' : 'left'"
+            signal: "datum.leftside ? 'right' : 'left'",
           },
-          opacity: { signal: "labels ? 1 : 0" }
-        }
-      }
-    }
-  ]
+          opacity: { signal: "labels ? 1 : 0" },
+        },
+      },
+    },
+  ],
 });

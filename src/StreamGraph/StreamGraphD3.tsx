@@ -11,31 +11,28 @@ interface Props {
 const width = 800;
 const height = 500;
 
-export default function StreamGraphD3({
-  data,
-  keys
-}: Props) {
-
-  const {
-    runId,
-    runBenchmark
-  } = useBenchmarkRunner();
+export default function StreamGraphD3({ data, keys }: Props) {
+  const { runId, runBenchmark } = useBenchmarkRunner();
 
   const svgRef = useRef<SVGSVGElement | null>(null);
   const layersRef = useRef<SVGPathElement[]>([]);
-  const clipRectRef = useRef<d3.Selection<SVGRectElement, unknown, null, undefined> | null>(null);
+  const clipRectRef = useRef<d3.Selection<
+    SVGRectElement,
+    unknown,
+    null,
+    undefined
+  > | null>(null);
 
   const startAnimation = () => {
-
     //if (!layersRef.current || !clipRectRef.current) return;
     if (!clipRectRef.current) return;
 
     //d3.selectAll(layersRef.current)
-      //.attr("clip-path", "url(#clip)");
-      // .style("opacity", 0)
-      // .transition()
-      // .duration(1200)
-      // .style("opacity", 0.9);
+    //.attr("clip-path", "url(#clip)");
+    // .style("opacity", 0)
+    // .transition()
+    // .duration(1200)
+    // .style("opacity", 0.9);
 
     clipRectRef.current
       .interrupt()
@@ -46,7 +43,6 @@ export default function StreamGraphD3({
   };
 
   useEffect(() => {
-
     const startTime = performance.now();
 
     if (!svgRef.current) return;
@@ -54,35 +50,41 @@ export default function StreamGraphD3({
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const stack = d3.stack<languageSpeakersType>()
+    const stack = d3
+      .stack<languageSpeakersType>()
       .keys(keys)
       .offset(d3.stackOffsetWiggle);
 
     const series = stack(data);
 
-    const x = d3.scaleLinear()
+    const x = d3
+      .scaleLinear()
       .domain([0, data.length - 1])
       .range([60, width - 20]);
 
-    const y = d3.scaleLinear()
+    const y = d3
+      .scaleLinear()
       .domain([
-        d3.min(series, s => d3.min(s, d => d[0]))!,
-        d3.max(series, s => d3.max(s, d => d[1]))!
+        d3.min(series, (s) => d3.min(s, (d) => d[0]))!,
+        d3.max(series, (s) => d3.max(s, (d) => d[1]))!,
       ])
       .range([height - 40, 40]);
 
-    const color = d3.scaleOrdinal<string>()
+    const color = d3
+      .scaleOrdinal<string>()
       .domain(keys)
       .range(d3.schemeCategory10);
 
-    const area = d3.area<d3.SeriesPoint<languageSpeakersType>>()
+    const area = d3
+      .area<d3.SeriesPoint<languageSpeakersType>>()
       .x((_d, i) => x(i))
-      .y0(d => y(d[0]))
-      .y1(d => y(d[1]))
+      .y0((d) => y(d[0]))
+      .y1((d) => y(d[1]))
       .curve(d3.curveCatmullRom.alpha(0.5));
 
     // Tooltip
-    const tooltip = d3.select("body")
+    const tooltip = d3
+      .select("body")
       .append("div")
       .style("position", "absolute")
       .style("background", "white")
@@ -95,11 +97,12 @@ export default function StreamGraphD3({
       .style("opacity", 0);
 
     // Draw layers
-    const layers = svg.selectAll("path")
+    const layers = svg
+      .selectAll("path")
       .data(series)
       .enter()
       .append("path")
-      .attr("fill", d => color(d.key)!)
+      .attr("fill", (d) => color(d.key)!)
       .attr("stroke", "none")
       .attr("opacity", 0.9)
       .attr("d", area);
@@ -108,12 +111,12 @@ export default function StreamGraphD3({
 
     layersRef.current = layers.nodes();
 
-    svg.append("rect")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("fill", "transparent")
-    .on("mousemove", function (event) {
-
+    svg
+      .append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "transparent")
+      .on("mousemove", function (event) {
         const [mouseX] = d3.pointer(event);
 
         const index = Math.round(x.invert(mouseX));
@@ -127,36 +130,36 @@ export default function StreamGraphD3({
 
         svg.selectAll(".guide-line").remove();
 
-        svg.append("line")
-        .attr("class", "guide-line")
-        .attr("x1", xPos)
-        .attr("x2", xPos)
-        .attr("y1", 40)
-        .attr("y2", height - 40)
-        .attr("stroke", "#333")
-        .attr("stroke-dasharray", "4 4");
+        svg
+          .append("line")
+          .attr("class", "guide-line")
+          .attr("x1", xPos)
+          .attr("x2", xPos)
+          .attr("y1", 40)
+          .attr("y2", height - 40)
+          .attr("stroke", "#333")
+          .attr("stroke-dasharray", "4 4");
 
         // Tooltip
         let html = `<strong>Year: ${dataPoint.year}</strong><br/><br/>`;
 
-        keys.forEach(k => {
-        html += `${k}: ${dataPoint[k as keyof languageSpeakersType]} M<br/>`;
+        keys.forEach((k) => {
+          html += `${k}: ${dataPoint[k as keyof languageSpeakersType]} M<br/>`;
         });
 
         tooltip
-        .style("opacity", 1)
-        .html(html)
-        .style("left", (event.pageX + 15) + "px")
-        .style("top", (event.pageY - 20) + "px");
-
-    })
-    .on("mouseout", () => {
+          .style("opacity", 1)
+          .html(html)
+          .style("left", event.pageX + 15 + "px")
+          .style("top", event.pageY - 20 + "px");
+      })
+      .on("mouseout", () => {
         tooltip.style("opacity", 0);
-    });
-    const clip = svg.append("clipPath")
-      .attr("id", "clip");
+      });
+    const clip = svg.append("clipPath").attr("id", "clip");
 
-    const clipRect = clip.append("rect")
+    const clipRect = clip
+      .append("rect")
       .attr("width", 0)
       .attr("height", height);
 
@@ -167,14 +170,12 @@ export default function StreamGraphD3({
         layers.transition().duration(200).style("opacity", 0.2);
         d3.select(this).transition().duration(200).style("opacity", 1);
 
-        tooltip.style("opacity", 1)
-          .html(`<strong>${d.key}</strong>`);
+        tooltip.style("opacity", 1).html(`<strong>${d.key}</strong>`);
       })
       .on("mousemove", function (event) {
         tooltip
-          .style("left", (event.pageX + 10) + "px")
-          .style("top", (event.pageY - 20) + "px");
-          
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 20 + "px");
       })
       .on("mouseout", function () {
         layers.transition().duration(200).style("opacity", 0.9);
@@ -182,20 +183,20 @@ export default function StreamGraphD3({
       });
 
     // X axis (years)
-    const xAxis = d3.axisBottom(x)
+    const xAxis = d3
+      .axisBottom(x)
       .ticks(data.length)
       .tickFormat((_d, i) => data[i]?.year as string);
 
-    svg.append("g")
+    svg
+      .append("g")
       .attr("transform", `translate(0, ${height - 40})`)
       .call(xAxis);
 
     // Y axis
     const yAxis = d3.axisLeft(y);
 
-    svg.append("g")
-      .attr("transform", `translate(60, 0)`)
-      .call(yAxis);
+    svg.append("g").attr("transform", `translate(60, 0)`).call(yAxis);
 
     const endTime = performance.now();
 
@@ -206,7 +207,6 @@ export default function StreamGraphD3({
     requestAnimationFrame(() => {
       frameTime = performance.now() - endTime;
       console.log("Frame time:", frameTime);
-    
 
       window.perfResults = window.perfResults || [];
 
@@ -214,10 +214,9 @@ export default function StreamGraphD3({
         name: "StreamGraphD3",
         renderTime: endTime - startTime,
         frameTime: frameTime,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     });
-
   }, [data, keys, runId]);
 
   return (
@@ -227,22 +226,21 @@ export default function StreamGraphD3({
         style={{
           marginBottom: "10px",
           padding: "8px 16px",
-          fontSize: "16px"
+          fontSize: "16px",
         }}
       >
         ▶ Play Animation
       </button>
       <svg ref={svgRef} width={width} height={height} />
 
-      <button 
-            onClick={() => runBenchmark(50)} 
-            style={{
-                marginTop: "35px",
-                
-            }}
-        >
-            Run 50 Benchmarks
-        </button>
+      <button
+        onClick={() => runBenchmark(50)}
+        style={{
+          marginTop: "35px",
+        }}
+      >
+        Run 50 Benchmarks
+      </button>
     </div>
   );
 }

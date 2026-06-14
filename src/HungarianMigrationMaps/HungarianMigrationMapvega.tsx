@@ -3,9 +3,8 @@ import { type MigrationPoint } from "../data/hungarianMigrationData";
 
 export const HungarianMigrationMapvega = (
   data: MigrationPoint[],
-  play: boolean
+  play: boolean,
 ): Spec => ({
-
   $schema: "https://vega.github.io/schema/vega/v5.json",
 
   width: 700,
@@ -14,7 +13,7 @@ export const HungarianMigrationMapvega = (
   signals: [
     {
       name: "play",
-      value: play
+      value: play,
     },
 
     {
@@ -23,10 +22,10 @@ export const HungarianMigrationMapvega = (
       on: [
         {
           events: { type: "timer", throttle: 1000 }, //800
-          update: "play ? step + 1 : step"
-        }
-      ]
-    }
+          update: "play ? step + 1 : step",
+        },
+      ],
+    },
   ],
 
   projections: [
@@ -36,22 +35,19 @@ export const HungarianMigrationMapvega = (
 
       //fit: { data: "world" },
       center: [40, 55],
-      
+
       scale: 150,
       //scale: 900,
 
-      translate: [
-        { signal: "width/2" },
-        { signal: "height/2" }
-      ]
-    }
+      translate: [{ signal: "width/2" }, { signal: "height/2" }],
+    },
   ],
 
   data: [
     {
       name: "world",
       url: "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
-      format: { type: "topojson", feature: "countries" }
+      format: { type: "topojson", feature: "countries" },
     },
 
     {
@@ -60,32 +56,29 @@ export const HungarianMigrationMapvega = (
       transform: [
         {
           type: "filter",
-          expr: "datum.index <= step"
+          expr: "datum.index <= step",
         },
         {
           type: "geopoint",
           projection: "projection",
           fields: ["lon", "lat"],
-          as: ["x", "y"]
-        }
-      ]
-    }
-
+          as: ["x", "y"],
+        },
+      ],
+    },
   ],
 
   marks: [
     {
       type: "shape",
       from: { data: "world" },
-      transform: [
-        { type: "geoshape", projection: "projection" }
-      ],
+      transform: [{ type: "geoshape", projection: "projection" }],
       encode: {
         update: {
           fill: { value: "#f0f0f0" },
-          stroke: { value: "#999" }
-        }
-      }
+          stroke: { value: "#999" },
+        },
+      },
     },
 
     {
@@ -96,9 +89,9 @@ export const HungarianMigrationMapvega = (
           x: { field: "x" },
           y: { field: "y" },
           stroke: { value: "#e63946" },
-          strokeWidth: { value: 3 }
-        }
-      }
+          strokeWidth: { value: 3 },
+        },
+      },
     },
 
     {
@@ -108,15 +101,14 @@ export const HungarianMigrationMapvega = (
         enter: {
           size: { value: 120 },
           fill: { value: "#1d3557" },
-          stroke: { value: "#fff" }
+          stroke: { value: "#fff" },
         },
         update: {
           x: { field: "x" },
           y: { field: "y" },
-          tooltip: { signal: "{name: datum.name, year: datum.year}" }
-        }
-      }
-    }
-
-  ]
+          tooltip: { signal: "{name: datum.name, year: datum.year}" },
+        },
+      },
+    },
+  ],
 });

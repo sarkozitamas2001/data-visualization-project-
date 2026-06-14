@@ -1,6 +1,6 @@
 export interface languageSpeakersType {
-    year: string;
-    [key: string]: string | number;
+  year: string;
+  [key: string]: string | number;
 }
 
 export const languageSpeakersNivo = [
@@ -10,7 +10,7 @@ export const languageSpeakersNivo = [
     German: 90,
     French: 40,
     Spanish: 45,
-    Hungarian: 10
+    Hungarian: 10,
   },
   {
     year: "1925",
@@ -18,7 +18,7 @@ export const languageSpeakersNivo = [
     German: 92,
     French: 42,
     Spanish: 52,
-    Hungarian: 10.5
+    Hungarian: 10.5,
   },
   {
     year: "1950",
@@ -26,7 +26,7 @@ export const languageSpeakersNivo = [
     German: 95,
     French: 45,
     Spanish: 60,
-    Hungarian: 11
+    Hungarian: 11,
   },
   {
     year: "1975",
@@ -34,7 +34,7 @@ export const languageSpeakersNivo = [
     German: 98,
     French: 55,
     Spanish: 75,
-    Hungarian: 12
+    Hungarian: 12,
   },
   {
     year: "2000",
@@ -42,7 +42,7 @@ export const languageSpeakersNivo = [
     German: 100,
     French: 65,
     Spanish: 90,
-    Hungarian: 13
+    Hungarian: 13,
   },
   {
     year: "2020",
@@ -50,6 +50,6 @@ export const languageSpeakersNivo = [
     German: 95,
     French: 80,
     Spanish: 110,
-    Hungarian: 13
-  }
+    Hungarian: 13,
+  },
 ];

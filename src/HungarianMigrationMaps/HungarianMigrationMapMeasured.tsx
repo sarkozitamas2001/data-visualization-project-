@@ -6,17 +6,11 @@ import { useBenchmark } from "../hooks/useBenchmark";
 import { useState } from "react";
 
 interface Props {
-    data: MigrationPoint[]
+  data: MigrationPoint[];
 }
 
-export default function HungarianMigrationMapMeasured({
-   data
-}: Props) {
-
-  const {
-    runId,
-    runBenchmark
-  } = useBenchmarkRunner();
+export default function HungarianMigrationMapMeasured({ data }: Props) {
+  const { runId, runBenchmark } = useBenchmarkRunner();
 
   const [play, setPlay] = useState(false);
 
@@ -29,21 +23,20 @@ export default function HungarianMigrationMapMeasured({
         style={{
           marginBottom: "10px",
           padding: "8px 16px",
-          fontSize: "16px"
+          fontSize: "16px",
         }}
       >
         ▶ Play Migration
       </button>
       <VegaEmbed key={runId} spec={HungarianMigrationMapvega(data, play)} />
-      <button 
-            onClick={() => runBenchmark(50)} 
-            style={{
-                marginTop: "35px",
-                
-            }}
-        >
-            Run 50 Benchmarks
-        </button>
+      <button
+        onClick={() => runBenchmark(50)}
+        style={{
+          marginTop: "35px",
+        }}
+      >
+        Run 50 Benchmarks
+      </button>
     </div>
   );
 }

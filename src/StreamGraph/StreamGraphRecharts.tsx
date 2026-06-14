@@ -5,7 +5,7 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";
 import { type languageSpeakersType } from "../data/languageSpeakers";
 import { useBenchmarkRunner } from "../hooks/useBenchmarkRunner";
@@ -16,27 +16,15 @@ interface Props {
   keys: string[];
 }
 
-export default function StreamGraphRecharts({
-  data, 
-  keys
-}: Props) {
-
-  const {
-    runId,
-    runBenchmark
-  } = useBenchmarkRunner();
+export default function StreamGraphRecharts({ data, keys }: Props) {
+  const { runId, runBenchmark } = useBenchmarkRunner();
 
   useBenchmark("StreamGraphRecharts", runId);
 
   return (
     <div style={{ width: "100%", height: 500 }}>
-      <ResponsiveContainer 
-        key={runId}
-        height={480}
-        width={760}
-      >
+      <ResponsiveContainer key={runId} height={480} width={760}>
         <AreaChart data={data}>
-
           <XAxis dataKey="year" />
 
           <YAxis />
@@ -46,25 +34,18 @@ export default function StreamGraphRecharts({
           <Legend />
 
           {keys.map((key) => (
-            <Area
-              key={key}
-              type="monotone"
-              dataKey={key}
-              stackId="1"
-            />
-          ))}          
-
+            <Area key={key} type="monotone" dataKey={key} stackId="1" />
+          ))}
         </AreaChart>
       </ResponsiveContainer>
-      <button 
-            onClick={() => runBenchmark(50)} 
-            style={{
-                marginTop: "35px",
-                
-            }}
-        >
-            Run 50 Benchmarks
-        </button>
+      <button
+        onClick={() => runBenchmark(50)}
+        style={{
+          marginTop: "35px",
+        }}
+      >
+        Run 50 Benchmarks
+      </button>
     </div>
   );
 }

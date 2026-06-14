@@ -17,15 +17,8 @@ interface Props {
 const width = 1000;
 const height = 500;
 
-export default function StreamGraphVisx({
-  data,
-  keys
-}: Props) {
-
-  const {
-    runId,
-    runBenchmark
-  } = useBenchmarkRunner();
+export default function StreamGraphVisx({ data, keys }: Props) {
+  const { runId, runBenchmark } = useBenchmarkRunner();
 
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [activeKeys, setActiveKeys] = useState<string[]>(keys);
@@ -37,12 +30,12 @@ export default function StreamGraphVisx({
 
   const xScale = scaleLinear({
     domain: [0, data.length - 1],
-    range: [60, width - 200]
+    range: [60, width - 200],
   });
 
   const yScale = scaleLinear({
     domain: [-120, 320],
-    range: [height - 40, 40]
+    range: [height - 40, 40],
   });
 
   const colorScale = scaleOrdinal<string, string>({
@@ -57,31 +50,29 @@ export default function StreamGraphVisx({
       "#ff8042",
       "#a4de6c",
       "#d0ed57",
-      "#8dd1e1"
-    ]
+      "#8dd1e1",
+    ],
   });
 
   // Legend toogle
   const toggleKey = (key: string) => {
     setActiveKeys((prev) =>
-      prev.includes(key)
-        ? prev.filter((k) => k !== key)
-        : [...prev, key]
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
   };
 
   // Tooltip positioning
-    const legendStartX = width - 200;
-    const tooltipWidth = 150;
+  const legendStartX = width - 200;
+  const tooltipWidth = 150;
 
-    const tooltipX =
+  const tooltipX =
     hoverIndex !== null
-        ? xScale(hoverIndex) > legendStartX - 20
+      ? xScale(hoverIndex) > legendStartX - 20
         ? xScale(hoverIndex) - tooltipWidth - 20
         : xScale(hoverIndex) + 10
-        : 0;
+      : 0;
 
-    useBenchmark("StreamChartVisx", runId);
+  useBenchmark("StreamChartVisx", runId);
 
   return (
     <div>
@@ -97,12 +88,7 @@ export default function StreamGraphVisx({
         ▶ Play Animation
       </button>
 
-      <svg
-        key={runId}
-        width={width}
-        height={height}
-      >
-
+      <svg key={runId} width={width} height={height}>
         {/* Animation */}
         <defs>
           <clipPath id="clip">
@@ -110,7 +96,7 @@ export default function StreamGraphVisx({
               width={clipWidth}
               height={height}
               style={{
-                transition: "width 2s linear"
+                transition: "width 2s linear",
               }}
             />
           </clipPath>
@@ -136,10 +122,7 @@ export default function StreamGraphVisx({
                   opacity={0.9}
                   style={{
                     transition: "opacity 0.2s",
-                    opacity:
-                      hoverIndex !== null
-                        ? 0.6
-                        : 0.9
+                    opacity: hoverIndex !== null ? 0.6 : 0.9,
                   }}
                 />
               ))
@@ -151,16 +134,10 @@ export default function StreamGraphVisx({
         <AxisBottom
           top={height - 40}
           scale={xScale}
-          tickFormat={(d) =>
-            data[d as number]?.year ?? ""
-          }
+          tickFormat={(d) => data[d as number]?.year ?? ""}
         />
 
-        <AxisLeft
-          left={60}
-          scale={yScale}
-          label="Speakers (millions)"
-        />
+        <AxisLeft left={60} scale={yScale} label="Speakers (millions)" />
 
         {/* Hover */}
         <rect
@@ -230,17 +207,15 @@ export default function StreamGraphVisx({
             </g>
           ))}
         </g>
-
       </svg>
-      <button 
-            onClick={() => runBenchmark(50)} 
-            style={{
-                marginTop: "35px",
-                
-            }}
-        >
-            Run 50 Benchmarks
-        </button>
+      <button
+        onClick={() => runBenchmark(50)}
+        style={{
+          marginTop: "35px",
+        }}
+      >
+        Run 50 Benchmarks
+      </button>
     </div>
   );
 }
